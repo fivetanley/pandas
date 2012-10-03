@@ -49,7 +49,7 @@ describe( 'Panda', function() {
 
     it( 'parses out pandas', function() {
       expect( jsonStreamStub ).to.have.been
-        .calledWith( [ 'pandas', true, true ] )
+        .calledWith( [ 'pandas', true, true, '_content' ] )
     })
 
     it( 'returns the JSONStream', function() {
