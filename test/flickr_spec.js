@@ -3,7 +3,7 @@ var s = require( './support' )
   , expect = s.expect
   , stub = s.stub
   , sandbox = require( 'sandboxed-module' )
-  , httpStub = stub().returns( { write: stub() }, end: stub() )
+  , httpStub = stub().returns( { end: stub() } )
   , Flickr = sandbox.require( '../lib/Flickr',{
       requires: {
         'http': { request: httpStub }
