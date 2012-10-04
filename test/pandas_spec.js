@@ -4,9 +4,7 @@ var support = require( './support' )
   , expect = support.expect
   , stream = require( 'stream' ).Stream
   , stub = support.stub
-  , flickrStreamPipeStub = stub().returnsArg( 0 )
-  , flickrStub = stub().returns( { pipe: flickrStreamPipeStub } )
-      .yields( flickrStreamPipeStub )
+  , flickrStub = stub()
   , parsedJsonPipeStub = stub()
   , jsonStreamStub = stub().returns( parsedJsonPipeStub )
   , Panda = sandbox.require( '../lib/pandas', {
@@ -18,6 +16,12 @@ var support = require( './support' )
 
 
 describe( 'Panda', function() {
+
+  beforeEach( function() {
+    flickrStub.reset()
+    jsonStreamStub.reset()
+    parsedJsonPipeStub.reset()
+  })
 
   var apiKey = 'laksdjlksdafj'
     , panda  = new Panda( apiKey )
@@ -37,13 +41,17 @@ describe( 'Panda', function() {
 
   describe( '#getList', function() {
 
-    var flickrStream = panda.getList()
+    var flickrStream
+
+    beforeEach( function() {
+      flickrStream = panda.getList()
+    })
 
     it( 'passes along the panda\'s api_key in an options object', function() {
       expect( flickrStub.args[0][1] ).to.have.ownProperty( 'api_key' )
     })
 
-    it( 'requests a response for the panda.flickr.getList', function() {
+    it( 'requests a response for the flickr.panda.getList', function() {
       expect( flickrStub ).to.have.been.calledWith( 'flickr.panda.getList' )
     })
 
@@ -54,6 +62,37 @@ describe( 'Panda', function() {
 
     it( 'returns the JSONStream', function() {
       expect( flickrStream ).to.equal( parsedJsonPipeStub )
+    })
+
+  })
+
+  describe( '#getPhoto', function() {
+
+    var photoStream
+
+    beforeEach( function() {
+      photoStream = panda.getPhotos( 'pan' )
+    })
+
+    it( 'passes along the panda\'s api_key in an options object', function() {
+      expect( flickrStub.args[0][1] ).to.have.ownProperty( 'api_key' )
+    })
+
+    it( 'passes along the panda name to the flickr request', function() {
+      expect( flickrStub.args[0][1] ).to.have.ownProperty( 'panda_name' )
+    })
+
+    it( 'requests a response for the flickr.panda.getPhoto', function() {
+      expect( flickrStub ).to.have.been.calledWith( 'flickr.panda.getPhotos' )
+    })
+
+    it( 'creates a JSON stream that listens for photos > photo', function() {
+      expect( jsonStreamStub ).to.have
+        .been.calledWith([  'photos', 'photo', true ])
+    })
+
+    it( 'returns the JSON stream that listens for photos', function() {
+      expect( photoStream ).to.equal( parsedJsonPipeStub )
     })
 
   })
