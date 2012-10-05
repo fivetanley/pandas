@@ -25,7 +25,7 @@ Returns a `ReadableStream` that emits a `data` event for every panda name.
 Usage:
 
 ```
-var pandaNameStream = pandas.getList()
+var pandaNameStream = panda.getList()
 pandaNameStream.on( 'data', function( data ) {
   console.log( data )
 })
@@ -38,7 +38,7 @@ Returns a `ReadableStream` that emits a `data` event for every photo the panda
  tells us about
 
 ```
-var pandaPhotoStream = pandas.getPhoto( 'example panda' )
+var pandaPhotoStream = panda.getPhoto( 'example panda' )
 pandaPhotoStream.on( 'data', function( photo ) {
   //if the panda has 10 photos, this will be called 10 times
   console.log( JSON.stringify( photo ) )
